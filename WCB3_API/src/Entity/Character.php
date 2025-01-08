@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
     operations: [
         new \ApiPlatform\Metadata\GetCollection(),
         new \ApiPlatform\Metadata\Get(name: 'random_characters', uriTemplate: '/random-characters', controller: 'App\Controller\CharacterController::getRandomCharacters'),
+        new \ApiPlatform\Metadata\Get(name: 'random_character', uriTemplate: '/random-character', controller: 'App\Controller\CharacterController::getRandomCharacter'),
         new \ApiPlatform\Metadata\Get(),
     ],
 )]
