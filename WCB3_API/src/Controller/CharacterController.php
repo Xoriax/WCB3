@@ -13,14 +13,21 @@ class CharacterController extends AbstractController
     #[Route('/api/random-characters', name: 'random_characters', methods: ['GET'])]
     public function getRandomCharacters(EntityManagerInterface $em): JsonResponse
     {
+        // Récupérer tous les personnages depuis la base de données
         $characters = $em->getRepository(Character::class)
             ->createQueryBuilder('c')
             ->getQuery()
             ->getResult();
 
-        shuffle($characters);
-        $randomCharacters = array_slice($characters, 0, 10);
+        // Générer une liste aléatoire avec répétitions possibles
+        $randomCharacters = [];
+        for ($i = 0; $i < 10; $i++) {
+            $randomIndex = array_rand($characters); // Choisir un index aléatoire
+            $randomCharacter = $characters[$randomIndex]; // Récupérer le personnage
+            $randomCharacters[] = $randomCharacter;
+        }
 
+        // Transformer les objets en tableau pour la réponse JSON
         $responseData = [];
         foreach ($randomCharacters as $character) {
             $responseData[] = [
@@ -43,14 +50,17 @@ class CharacterController extends AbstractController
     #[Route('/api/random-character', name: 'random_character', methods: ['GET'])]
     public function getRandomCharacter(EntityManagerInterface $em): JsonResponse
     {
+        // Récupérer tous les personnages depuis la base de données
         $characters = $em->getRepository(Character::class)
             ->createQueryBuilder('c')
             ->getQuery()
             ->getResult();
 
-        shuffle($characters);
-        $randomCharacter = $characters[0];
+        // Choisir un personnage aléatoire
+        $randomIndex = array_rand($characters);
+        $randomCharacter = $characters[$randomIndex];
 
+        // Transformer l'objet en tableau pour la réponse JSON
         $responseData = [
             'id' => $randomCharacter->getId(),
             'nom' => $randomCharacter->getNom(),
