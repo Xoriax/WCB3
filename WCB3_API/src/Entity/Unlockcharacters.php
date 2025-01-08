@@ -9,6 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     operations: [
         new \ApiPlatform\Metadata\GetCollection(),
+        new \ApiPlatform\Metadata\Get(
+            uriTemplate: '/unlockcharacters/user/{id}',
+            controller: 'App\Controller\UnlockCharactersController::getUnlockCharactersByUser',
+            name: 'get_unlock_characters_by_user'
+        ),
     ],
 )]
 class Unlockcharacters
