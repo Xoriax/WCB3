@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     operations: [
         new \ApiPlatform\Metadata\GetCollection(),
+        new \ApiPlatform\Metadata\Get(name: 'random_characters', uriTemplate: '/random-characters', controller: 'App\Controller\CharacterController::getRandomCharacters'),
         new \ApiPlatform\Metadata\Get(),
     ],
 )]
