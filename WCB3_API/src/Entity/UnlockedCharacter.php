@@ -8,7 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UnlockedCharacterRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new \ApiPlatform\Metadata\GetCollection(),
+    ],
+)]
 class UnlockedCharacter
 {
     #[ORM\Id]
