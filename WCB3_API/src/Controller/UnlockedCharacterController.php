@@ -6,8 +6,7 @@ use App\Entity\UnlockedCharacter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class UnlockedCharacterController extends AbstractController
 {
@@ -19,8 +18,7 @@ class UnlockedCharacterController extends AbstractController
         ]);
     }
 
-    #[Route('/api/users/{id}/unlocked-characters', name: 'get_unlocked_characters_by_user', methods: ['GET'])]
-    public function getUnlockedCharactersByUser(int $id, EntityManagerInterface $em): JsonResponse
+    public function __invoke(EntityManagerInterface $em, int $id): JsonResponse
     {
         $unlockedCharacters = $em->getRepository(UnlockedCharacter::class)
             ->createQueryBuilder('uc')

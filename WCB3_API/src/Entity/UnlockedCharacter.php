@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UnlockedCharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -10,9 +11,14 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: UnlockedCharacterRepository::class)]
 #[ApiResource(
     operations: [
-        new \ApiPlatform\Metadata\GetCollection(),
+        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/users/{id}/unlocked-characters',
+            controller: \App\Controller\UnlockedCharacterController::class,
+        ),
     ],
 )]
+
 class UnlockedCharacter
 {
     #[ORM\Id]
