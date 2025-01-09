@@ -15,12 +15,10 @@ use  Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class RegistrationController extends AbstractController
 {
+    #[Route('/api/register', name: 'api_register', methods: ['POST'])]
     #[Route('/register', name: 'app_register')]
-    public function register(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
-    ): Response {
+    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
         $user = new Users();
         $form = $this->createForm(RegistrationFormType::class, $user);
 
@@ -38,10 +36,16 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Redirect to a success page or login
+            // Return JSON response for API
+            if ($request->attributes->get('_route') === 'api_register') {
+                return $this->json(['message' => 'User registered successfully'], Response::HTTP_CREATED);
+            }
+
+            // Redirect to a success page for web
             return $this->redirectToRoute('app_character');
         }
 
+        // Render the registration form for web
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);

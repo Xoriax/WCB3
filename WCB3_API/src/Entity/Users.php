@@ -9,13 +9,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-#[ApiResource(
-    operations: [
-        new \ApiPlatform\Metadata\GetCollection(),
-        new \ApiPlatform\Metadata\Get(),
-    ],
-)]
-class Users implements PasswordAuthenticatedUserInterface
+#[ApiResource]
+class Users implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -85,5 +80,21 @@ class Users implements PasswordAuthenticatedUserInterface
         $this->Is_Verified = $Is_Verified;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Si vous stockez des données sensibles temporairement, nettoyez-les ici.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        // Retourne le champ utilisé pour l'identifiant (mail dans ce cas)
+        return $this->mail;
     }
 }
