@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnages Aléatoires</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .characters {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .character-card {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            background: #fff;
+        }
+        .character-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        button {
+            margin: 1rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Personnages Aléatoires</h1>
+    </header>
+    <div class="container">
+        <button id="load-random-characters">Charger 10 personnages</button>
+        <button id="load-random-character">Charger un personnage</button>
+        <div id="characters" class="characters"></div>
+    </div>
+    <script>
+        const charactersContainer = document.getElementById('characters');
+        const randomCharactersButton = document.getElementById('load-random-characters');
+        const randomCharacterButton = document.getElementById('load-random-character');
+
+        // Charger 10 personnages aléatoires
+        randomCharactersButton.addEventListener('click', async () => {
+            charactersContainer.innerHTML = ''; // Vider la liste existante
+            const response = await fetch('/api/random-characters');
+            const characters = await response.json();
+
+            characters.forEach(character => {
+                const card = document.createElement('div');
+                card.classList.add('character-card');
+                card.innerHTML = `
+                    <img src="${character.img}" alt="${character.nom}">
+                    <h3>${character.nom}</h3>
+                    <p>Âge : ${character.age}</p>
+                    <p>Race : ${character.race}</p>
+                    <p>Compétence : ${character.competence}</p>
+                    <p>Vie : ${character.vie}</p>
+                    <p>ATK : ${character.atk}</p>
+                    <p>${character.lore}</p>
+                `;
+                charactersContainer.appendChild(card);
+            });
+        });
+
+        // Charger un personnage aléatoire
+        randomCharacterButton.addEventListener('click', async () => {
+            charactersContainer.innerHTML = ''; // Vider la liste existante
+            const response = await fetch('/api/random-character');
+            const character = await response.json();
+
+            const card = document.createElement('div');
+            card.classList.add('character-card');
+            card.innerHTML = `
+                <img src="${character.img}" alt="${character.nom}">
+                <h3>${character.nom}</h3>
+                <p>Âge : ${character.age}</p>
+                <p>Race : ${character.race}</p>
+                <p>Compétence : ${character.competence}</p>
+                <p>Vie : ${character.vie}</p>
+                <p>ATK : ${character.atk}</p>
+                <p>${character.lore}</p>
+            `;
+            charactersContainer.appendChild(card);
+        });
+    </script>
+</body>
+</html>

@@ -3,68 +3,87 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ApiResource(
     operations: [
         new \ApiPlatform\Metadata\GetCollection(),
         new \ApiPlatform\Metadata\Get(),
     ],
 )]
-class Users
+class Users implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $pseudo;
+    #[ORM\Column(length: 255)]
+    private ?string $pseudo = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $mail;
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $mail = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $mdp;
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
 
-    // Getters et setters...
+    #[ORM\Column]
+    private ?bool $Is_Verified = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPseudo(): string
+    public function getPseudo(): ?string
     {
         return $this->pseudo;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(string $pseudo): static
     {
         $this->pseudo = $pseudo;
+
         return $this;
     }
 
-    public function getMail(): string
+    public function getMail(): ?string
     {
         return $this->mail;
     }
 
-    public function setMail(string $mail): self
+    public function setMail(string $mail): static
     {
         $this->mail = $mail;
+
         return $this;
     }
 
-    public function getMdp(): string
+    public function getPassword(): ?string
     {
-        return $this->mdp;
+        return $this->password;
     }
 
-    public function setMdp(string $mdp): self
+    public function setPassword(string $password): static
     {
-        $this->mdp = $mdp;
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->Is_Verified;
+    }
+
+    public function setVerified(bool $Is_Verified): static
+    {
+        $this->Is_Verified = $Is_Verified;
+
         return $this;
     }
 }

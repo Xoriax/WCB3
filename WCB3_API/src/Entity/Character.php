@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: CharacterRepository::class)]
 #[ApiResource(
     operations: [
         new \ApiPlatform\Metadata\GetCollection(),
@@ -18,128 +20,129 @@ class Character
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $nom;
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
 
-    #[ORM\Column(type: 'integer')]
-    private int $age;
+    #[ORM\Column]
+    private ?int $age = null;
 
-    #[ORM\Column(type: 'text')]
-    private string $lore;
+    #[ORM\Column(length: 255)]
+    private ?string $lore = null;
 
-    #[ORM\Column(type: 'integer')]
-    private int $atk;
+    #[ORM\Column]
+    private ?int $atk = null;
 
-    #[ORM\Column(type: 'integer')]
-    private int $vie;
+    #[ORM\Column]
+    private ?int $vie = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $competence;
+    #[ORM\Column(length: 255)]
+    private ?string $competence = null;
 
-    #[ORM\Column(type: 'string', length: 10)]
-    private string $sexe;
+    #[ORM\Column(length: 10)]
+    private ?string $sexe = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $img;
+    #[ORM\Column(length: 255)]
+    private ?string $img = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $race;
-
-    // Getters et setters...
+    #[ORM\Column(length: 255)]
+    private ?string $race = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): string
+    public function setId(Uuid $id): static
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
         return $this;
     }
 
-    public function getAge(): int
+    public function getAge(): ?int
     {
         return $this->age;
     }
 
-    public function setAge(int $age): self
+    public function setAge(int $age): static
     {
         $this->age = $age;
+
         return $this;
     }
 
-    public function getLore(): string
+    public function getLore(): ?string
     {
         return $this->lore;
     }
 
-    public function setLore(string $lore): self
+    public function setLore(string $lore): static
     {
         $this->lore = $lore;
+
         return $this;
     }
 
-    public function getAtk(): int
+    public function getAtk(): ?int
     {
         return $this->atk;
     }
 
-    public function setAtk(int $atk): self
+    public function setAtk(int $atk): static
     {
         $this->atk = $atk;
+
         return $this;
     }
 
-    public function getVie(): int
+    public function getVie(): ?int
     {
         return $this->vie;
     }
 
-    public function setVie(int $vie): self
+    public function setVie(int $vie): static
     {
         $this->vie = $vie;
+
         return $this;
     }
 
-    public function getCompetence(): string
+    public function getCompetence(): ?string
     {
         return $this->competence;
     }
 
-    public function setCompetence(string $competence): self
+    public function setCompetence(string $competence): static
     {
         $this->competence = $competence;
+
         return $this;
     }
 
-    public function getSexe(): string
+    public function getSexe(): ?string
     {
         return $this->sexe;
     }
 
-    public function setSexe(string $sexe): self
+    public function setSexe(string $sexe): static
     {
         $this->sexe = $sexe;
-        return $this;
-    }
 
-    public function getRace(): string
-    {
-        return $this->race;
-    }
-
-    public function setRace(string $race): self
-    {
-        $this->nom = $race;
         return $this;
     }
 
@@ -148,10 +151,22 @@ class Character
         return $this->img;
     }
 
-    public function setImg(?string $img): self
+    public function setImg(string $img): static
     {
         $this->img = $img;
+
         return $this;
     }
 
+    public function getRace(): ?string
+    {
+        return $this->race;
+    }
+
+    public function setRace(string $race): static
+    {
+        $this->race = $race;
+
+        return $this;
+    }
 }
