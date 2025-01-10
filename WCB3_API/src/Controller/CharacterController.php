@@ -93,4 +93,4 @@ class CharacterController extends AbstractController
 
         return new JsonResponse($responseData);
     }
-}
+} 
