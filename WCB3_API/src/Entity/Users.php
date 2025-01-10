@@ -9,8 +9,13 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-#[ApiResource]
-class Users implements UserInterface,PasswordAuthenticatedUserInterface
+#[ApiResource(
+    operations: [
+        new \ApiPlatform\Metadata\GetCollection(),
+        new \ApiPlatform\Metadata\Get(),
+    ],
+)]
+class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
