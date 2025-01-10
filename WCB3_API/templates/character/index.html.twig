@@ -174,5 +174,44 @@
             }, 1000); 
         });
     </script>
-</body>
+<script>
+    function handleButtonClick(button) {
+        // Disable the button
+        button.disabled = true;
+        button.innerText = "Vous pourrez invoquer dans 1 minute";
+
+        // Re-enable the button after 1 minute
+        setTimeout(function() {
+            button.disabled = false;
+            button.innerText = "Relancez l'invocation !"; // Change back to original text
+        }, 60000); // 60000 milliseconds = 1 minute
+    }
+
+    // Update the button click event listeners to use the new function
+    randomCharactersButton.addEventListener('click', async () => {
+        handleButtonClick(randomCharactersButton); // Call the function
+        charactersContainer.innerHTML = ''; // Vider la liste existante
+        const response = await fetch('/api/random-characters');
+        const characters = await response.json();
+
+        setTimeout(() => {
+            characters.forEach(character => {
+                const card = createCharacterCard(character);
+                charactersContainer.appendChild(card);
+            });
+        }, 1000); 
+    });
+
+    randomCharacterButton.addEventListener('click', async () => {
+        handleButtonClick(randomCharacterButton); // Call the function
+        charactersContainer.innerHTML = ''; 
+        const response = await fetch('/api/random-character');
+        const character = await response.json();
+
+        setTimeout(() => {
+            const card = createCharacterCard(character);
+            charactersContainer.appendChild(card);
+        }, 1000); 
+    });
+</script>
 </html>
