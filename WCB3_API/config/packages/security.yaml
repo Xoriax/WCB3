@@ -1,0 +1,40 @@
+security:
+
+    # Encodage des mots de passe
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        in_memory: 
+            memory:
+                users:
+                    admin:
+                        password: '$2y$13$VJc0zbsDj1rIzpWxaK9pve1Aq9wzp4CZ0V4XJ5Bp2nF75.JO/diSm' # bcrypt hash du mot de passe "admin"
+                        roles: 'ROLE_ADMIN'
+
+    # Firewall configuration
+    firewalls:
+        dev:
+            pattern: ^/
+            security: false
+
+        main:
+            lazy: true
+            provider: in_memory
+
+            # Activer la connexion avec le formulaire
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: app_character
+
+            # Déconnexion
+            logout:
+                path: app_logout
+                target: /
+
+    # Restrictions basées sur les rôles
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    
