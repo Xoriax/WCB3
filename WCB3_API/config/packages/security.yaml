@@ -1,39 +1,40 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+
+    # Encodage des mots de passe
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+
     providers:
-        users_in_memory: { memory: null }
+        in_memory: 
+            memory:
+                users:
+                    admin:
+                        password: '$2y$13$VJc0zbsDj1rIzpWxaK9pve1Aq9wzp4CZ0V4XJ5Bp2nF75.JO/diSm' # bcrypt hash du mot de passe "admin"
+                        roles: 'ROLE_ADMIN'
+
+    # Firewall configuration
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/
             security: false
+
         main:
             lazy: true
-            provider: users_in_memory
+            provider: in_memory
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+            # Activer la connexion avec le formulaire
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: app_character
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            # Déconnexion
+            logout:
+                path: app_logout
+                target: /
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+    # Restrictions basées sur les rôles
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-
-when@test:
-    security:
-        password_hashers:
-            # By default, password hashers are resource intensive and take time. This is
-            # important to generate secure password hashes. In tests however, secure hashes
-            # are not important, waste resources and increase test times. The following
-            # reduces the work factor to the lowest possible values.
-            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-                algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    

@@ -2,29 +2,59 @@
 
 namespace App\Controller;
 
+use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
+    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
+    public function login(
+        Request $request,
+        UsersRepository $usersRepository,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response {
+        // Si l'utilisateur est déjà connecté, redirection vers une page spécifique
         if ($this->getUser()) {
-            return $this->redirectToRoute('target_path'); // Replace 'target_path' with the actual route name
+            return $this->redirectToRoute('app_character');
         }
 
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
+        // Si c'est une requête POST (soumission du formulaire de connexion)
+        if ($request->isMethod('POST')) {
+            $pseudo = $request->request->get('pseudo');
+            $password = $request->request->get('password');
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+            // Vérification des données
+            if (!$pseudo || !$password) {
+                return $this->render('security/login.html.twig', [
+                    'error' => 'Missing username or password',
+                ]);
+            }
+
+            // Rechercher l'utilisateur
+            $user = $usersRepository->findOneBy(['username' => $pseudo]);
+
+            // Vérifier si l'utilisateur existe et si le mot de passe est valide
+            if (!$user || !$passwordHasher->isPasswordValid($user, $password)) {
+                return $this->render('security/login.html.twig', [
+                    'error' => 'Invalid credentials',
+                ]);
+            }
+
+            // Rediriger vers une page en cas de succès (simule une connexion réussie)
+            return $this->redirectToRoute('app_character');
+        }
+
+        // Pour une requête GET, afficher le formulaire
+        return $this->render('security/login.html.twig', [
+            'error' => null, // Pas d'erreur initialement
+        ]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
+    #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
